@@ -1,4 +1,4 @@
 (executable
  (public_name foo)
  (name main)
- (libraries foo bar.bar))
+ (libraries foo bar.bar lwt.unix))
