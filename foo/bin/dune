@@ -1,4 +1,3 @@
-(executable
- (public_name foo)
- (name main)
- (libraries foo bar.bar))
+(executables
+ (names main parg pcmd)
+ (libraries foo bar.bar cmdliner))
