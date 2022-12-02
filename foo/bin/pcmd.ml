@@ -4,9 +4,9 @@ type prompt = Always | Once | Never
 let prompt_str = function
 | Always -> "always" | Once -> "once" | Never -> "never"
 
-let rm prompt recurse largs files =
-  Printf.printf " prompt = %s\n recurse = %B\n largs = %s\n files = %s\n"
-    (prompt_str prompt) recurse (String.concat ", " largs) (String.concat ", " files)
+let rm prompt recurse largs config files =
+  Printf.printf " prompt = %s\n recurse = %B\n largs = %s\n config = %s\n files = %s\n"
+    (prompt_str prompt) recurse (String.concat ", " largs) config (String.concat ", " files)
 
 (* Command line interface *)
 
@@ -35,9 +35,17 @@ let recursive =
   let doc = "Remove directories and their contents recursively." in
   Arg.(value & flag & info ["r"; "R"; "recursive"] ~doc)
 
-let larg =
+let larg1 =
   let doc = "list file args" in
   Arg.(value & opt (list file) [] & info ["l"; "L"; "larg"] ~doc)
+
+let larg =
+  let doc = "list file args" in
+  Arg.(non_empty & opt (list file) [] & info ["l"; "L"; "larg"] ~doc)
+
+let config =
+  let doc = "list file args" in
+  Arg.(required & opt (some file) None & info ["c"; "C"; "config"] ~doc)
 
 let cmd =
   let doc = "Remove files or directories" in
@@ -56,7 +64,7 @@ let cmd =
     `S Manpage.s_see_also; `P "$(b,rmdir)(1), $(b,unlink)(2)" ]
   in
   let info = Cmd.info "rm" ~version:"%%VERSION%%" ~doc ~man in
-  Cmd.v info Term.(const rm $ prompt $ recursive $ larg $ files)
+  Cmd.v info Term.(const rm $ prompt $ recursive $ larg $ config $ files)
 
 let main () = exit (Cmd.eval cmd)
 let () = main ()
