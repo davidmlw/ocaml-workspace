@@ -1,3 +1,25 @@
-(executables
- (names main parg pcmd files arch)
+
+(executable
+ (name main)
+ (modules main)
+ (libraries foo bar.bar cmdliner lwt.unix))
+
+(executable
+ (name parg)
+ (modules parg)
+ (libraries foo bar.bar cmdliner lwt.unix))
+
+(executable
+ (name pcmd)
+ (modules pcmd)
+ (libraries foo bar.bar cmdliner lwt.unix))
+
+(executable
+ (name files)
+ (modules files)
+ (libraries foo bar.bar cmdliner lwt.unix))
+
+(executable
+ (name arch)
+ (modules arch)
  (libraries foo bar.bar cmdliner lwt.unix))

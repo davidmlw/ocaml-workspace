@@ -62,23 +62,44 @@ type feature = {
     documentation: string
   }
 
-type extention = RAS | PMU | Debug | PCSR | ETM
-
-type elx = EL0 | EL1 | EL2 | EL3
 
 type architechure = {
     name: string;
     version: version;
-    extensions: extention list;
-    a64elx: elx list;
-    a32elx: elx list;
     features: feature list}
-
-let has_extension ext arch =
-  List.mem ext arch.extensions
 
 open Option
 let feature name optional mandatory aarch64 aarch32 documentation = {name=name; optional=optional; mandatory=mandatory; aarch64=aarch64; aarch32=aarch32; documentation=documentation}
+
+let version_ARMv8p0          = feature "ARMv8p0"                  None v8p0 true  true  "Arm A-profile Version 8.0"
+let version_ARMv8p1          = feature "ARMv8p1"                  None v8p1 true  true  "Arm A-profile Version 8.1"
+let version_ARMv8p2          = feature "ARMv8p2"                  None v8p2 true  true  "Arm A-profile Version 8.2"
+let version_ARMv8p3          = feature "ARMv8p3"                  None v8p3 true  true  "Arm A-profile Version 8.3"
+let version_ARMv8p4          = feature "ARMv8p4"                  None v8p4 true  true  "Arm A-profile Version 8.4"
+let version_ARMv8p5          = feature "ARMv8p5"                  None v8p5 true  true  "Arm A-profile Version 8.5"
+let version_ARMv8p6          = feature "ARMv8p6"                  None v8p6 true  true  "Arm A-profile Version 8.6"
+let version_ARMv8p7          = feature "ARMv8p7"                  None v8p7 true  true  "Arm A-profile Version 8.7"
+let version_ARMv8p8          = feature "ARMv8p8"                  None v8p8 true  true  "Arm A-profile Version 8.8"
+let version_ARMv8p9          = feature "ARMv8p9"                  None v8p9 true  true  "Arm A-profile Version 8.9"
+let version_ARMv9p0          = feature "ARMv9p0"                  None v9p0 true  true  "Arm A-profile Version 9.0"
+let version_ARMv9p1          = feature "ARMv9p1"                  None v9p1 true  true  "Arm A-profile Version 9.1"
+let version_ARMv9p2          = feature "ARMv9p2"                  None v9p2 true  true  "Arm A-profile Version 9.2"
+let version_ARMv9p3          = feature "ARMv9p3"                  None v9p3 true  true  "Arm A-profile Version 9.3"
+
+let aarch32                  = feature "AARCH32"                  v8p0 None false true  "Arm A-profile Aarch32"
+let aarch32_EL0              = feature "AARCH32_EL0"              v8p0 None false true  "Arm A-profile Aarch32 EL0"
+let aarch32_EL1              = feature "AARCH32_EL1"              v8p0 None false true  "Arm A-profile Aarch32 EL1"
+let aarch32_EL2              = feature "AARCH32_EL2"              v8p0 None false true  "Arm A-profile Aarch32 EL2"
+let aarch32_EL3              = feature "AARCH32_EL3"              v8p0 None false true  "Arm A-profile Aarch32 EL3"
+let aarch64                  = feature "AARCH64"                  v8p0 None false true  "Arm A-profile Aarch64"
+let aarch64_EL0              = feature "AARCH64_EL0"              v8p0 None true  false "Arm A-profile Aarch64 EL0"
+let aarch64_EL1              = feature "AARCH64_EL1"              v8p0 None true  false "Arm A-profile Aarch64 EL1"
+let aarch64_EL2              = feature "AARCH64_EL2"              v8p0 None true  false "Arm A-profile Aarch64 EL2"
+let aarch64_EL3              = feature "AARCH64_EL3"              v8p0 None true  false "Arm A-profile Aarch64 EL3"
+let feat_SIMDFP              = feature "EXTENSION_SIMDFP"         v8p0 None true  true  "Arm A-profile Advanced SIMD and Floating-Point extension"
+let feat_PMUv3               = feature "EXTENSION_PMUv3"          v8p0 None true  true  "The Performance Monitors Extension"
+let feat_ETM                 = feature "EXTENSION_ETM"            v8p0 None true  true  "Arm A-profile extension ETM"
+let feat_Debug               = feature "EXTENSION_DEBUG"          v8p0 None true  true  "Arm A-profile extension DEBUG"
 
 (* 2022 Architecture Extensions *)
 let feat_ABLE                = feature "FEAT_ABLE"                None None true  false "Address Breakpoint Linking extension"
@@ -139,45 +160,45 @@ let feat_THE                 = feature "FEAT_THE"                 None None true
 let feat_TRBE_EXT            = feature "FEAT_TRBE_EXT"            None None true  false "TRBE external mode"
 
 (* 2021 Architecture Extensions *)
-let feat_CMOW                = feature "FEAT_CMOW"                None None true  false "Control for cache maintenance permission"
+let feat_CMOW                = feature "FEAT_CMOW"                None v8p8 true  false "Control for cache maintenance permission"
 let feat_CONSTPACFIELD       = feature "FEAT_CONSTPACFIELD"       v8p3 None true  false "PAC Algorithm enhancement"
-let feat_Debugv8p8           = feature "FEAT_Debugv8p8"           None None true  false "Debug v8.8"
-let feat_HBC                 = feature "FEAT_HBC"                 None None true  false "Hinted conditional branches"
-let feat_HPMN0               = feature "FEAT_HPMN0"               None None true  false "Setting of MDCR_EL2.HPMN to zero"
-let feat_NMI                 = feature "FEAT_NMI"                 None None true  false "Non-maskable Interrupts"
+let feat_Debugv8p8           = feature "FEAT_Debugv8p8"           v8p8 None true  true  "Debug v8.8"
+let feat_HBC                 = feature "FEAT_HBC"                 None v8p8 true  false "Hinted conditional branches"
+let feat_HPMN0               = feature "FEAT_HPMN0"               v8p8 None true  true  "Setting of MDCR_EL2.HPMN to zero"
+let feat_NMI                 = feature "FEAT_NMI"                 None v8p8 true  false "Non-maskable Interrupts"
 let feat_GICv3_NMI           = feature "FEAT_GICv3_NMI"           None None true  false "Non-maskable Interrupts"
-let feat_MOPS                = feature "FEAT_MOPS"                None None true  false "Standardization of memory operations"
+let feat_MOPS                = feature "FEAT_MOPS"                None v8p8 true  false "Standardization of memory operations"
 let feat_PACQARMA3           = feature "FEAT_PACQARMA3"           v8p3 None true  false "Pointer authentication - QARMA3 algorithm"
-let feat_PMUv3_TH            = feature "FEAT_PMUv3_TH"            None None true  false "Event counting threshold"
-let feat_PMUv3p8             = feature "FEAT_PMUv3p8"             None None true  false "Armv8.8 PMU Extensions"
+let feat_PMUv3_TH            = feature "FEAT_PMUv3_TH"            v8p8 None true  true  "Event counting threshold"
+let feat_PMUv3p8             = feature "FEAT_PMUv3p8"             v8p8 None true  true  "Armv8.8 PMU Extensions"
 let feat_PMUv3_EXT64         = feature "FEAT_PMUv3_EXT64"         None None true  false "Optional 64-bit external interface to the Performance Monitors"
 let feat_PMUv3_EXT32         = feature "FEAT_PMUv3_EXT32"         None None true  false "Represents the original mostly 32-bit external interface to the Performance Monitors"
-let feat_RNG_TRAP            = feature "FEAT_RNG_TRAP"            None None true  false "Trapping support for RNDR and RNDRRS"
-let feat_SPEv1p3             = feature "FEAT_SPEv1p3"             None None true  false "Armv8.8 Statistical Profiling Extensions"
-let feat_TIDCP1              = feature "FEAT_TIDCP1"              None None true  false "EL0 use of IMPLEMENTATION DEFINED functionality"
-let feat_BRBEv1p1            = feature "FEAT_BRBEv1p1"            None None true  false "Branch Record Buffer Extensions version 1.1"
+let feat_RNG_TRAP            = feature "FEAT_RNG_TRAP"            v8p5 None true  false "Trapping support for RNDR and RNDRRS"
+let feat_SPEv1p3             = feature "FEAT_SPEv1p3"             None v8p8 true  true  "Armv8.8 Statistical Profiling Extensions"
+let feat_TIDCP1              = feature "FEAT_TIDCP1"              None v8p1 true  true  "EL0 use of IMPLEMENTATION DEFINED functionality"
+let feat_BRBEv1p1            = feature "FEAT_BRBEv1p1"            v9p3 None true  false "Branch Record Buffer Extensions version 1.1"
 
 
 (* 2020 Architecture Extensions *)
-let feat_AFP                 = feature "FEAT_AFP"                 None None true  false "Alternate floating-point behavior"
-let feat_HCX                 = feature "FEAT_HCX"                 None None true  false "Support for the HCRX_EL2 register"
-let feat_LPA2                = feature "FEAT_LPA2"                None None true  false "Larger physical address for 4KB and 16KB translation granules"
-let feat_LS64                = feature "FEAT_LS64"                None None true  false "Support for 64 byte loads/stores without return"
-let feat_LS64_V              = feature "FEAT_LS64_V"              None None true  false "Support for 64-byte stores with return"
-let feat_LS64_ACCDATA        = feature "FEAT_LS64_ACCDATA"        None None true  false "Support for 64-byte EL0 stores with return"
-let feat_MTE3                = feature "FEAT_MTE3"                None None true  false "MTE Asymmetric Fault Handling"
+let feat_AFP                 = feature "FEAT_AFP"                 None v8p7 true  false "Alternate floating-point behavior"
+let feat_HCX                 = feature "FEAT_HCX"                 None v8p7 true  false "Support for the HCRX_EL2 register"
+let feat_LPA2                = feature "FEAT_LPA2"                v8p7 None true  false "Larger physical address for 4KB and 16KB translation granules"
+let feat_LS64                = feature "FEAT_LS64"                v8p7 None true  false "Support for 64 byte loads/stores without return"
+let feat_LS64_V              = feature "FEAT_LS64_V"              v8p7 None true  false "Support for 64-byte stores with return"
+let feat_LS64_ACCDATA        = feature "FEAT_LS64_ACCDATA"        v8p7 None true  false "Support for 64-byte EL0 stores with return"
+let feat_MTE3                = feature "FEAT_MTE3"                v8p5 v8p7 true  false "MTE Asymmetric Fault Handling"
 let feat_PAN3                = feature "FEAT_PAN3"                v8p1 v8p7 true  false "Support for SCTLR_ELx.EPAN"
-let feat_PMUv3p7             = feature "FEAT_PMUv3p7"             None None true  false "Armv8.7 PMU Extensions"
-let feat_RPRES               = feature "FEAT_RPRES"               None None true  false "Increased precision of Reciprocal Estimate and Reciprocal Square Root Estimate"
-let feat_RME                 = feature "FEAT_RME"                 None None true  false "Realm Management Extension"
-let feat_SME_FA64            = feature "FEAT_SME_FA64"            None None true  false "Additional instructions for the SME Extension"
-let feat_SME_F64F64          = feature "FEAT_SME_F64F64"          None None true  false "Additional instructions for the SME Extension"
-let feat_SME_I16I64          = feature "FEAT_SME_I16I64"          None None true  false "Additional instructions for the SME Extension"
-let feat_EBF16               = feature "FEAT_EBF16"               None None true  false "Additional instructions for the SME Extension"
-let feat_SPEv1p2             = feature "FEAT_SPEv1p2"             None None true  false "Armv8.7 SPE"
-let feat_WFxT                = feature "FEAT_WFxT"                None None true  false "WFE and WFI instructions with timeout"
-let feat_XS                  = feature "FEAT_XS"                  None None true  false "XS attribute"
-let feat_BRBE                = feature "FEAT_BRBE"                None None true  false "Branch Record Buffer Extensions"
+let feat_PMUv3p7             = feature "FEAT_PMUv3p7"             None v8p7 true  true  "Armv8.7 PMU Extensions"
+let feat_RPRES               = feature "FEAT_RPRES"               v8p7 None true  false "Increased precision of Reciprocal Estimate and Reciprocal Square Root Estimate"
+let feat_RME                 = feature "FEAT_RME"                 v9p2 None true  false "Realm Management Extension"
+let feat_SME_FA64            = feature "FEAT_SME_FA64"            v9p2 None true  false "Additional instructions for the SME Extension"
+let feat_SME_F64F64          = feature "FEAT_SME_F64F64"          v9p2 None true  false "Additional instructions for the SME Extension"
+let feat_SME_I16I64          = feature "FEAT_SME_I16I64"          v9p2 None true  false "Additional instructions for the SME Extension"
+let feat_EBF16               = feature "FEAT_EBF16"               v9p2 None true  false "Additional instructions for the SME Extension"
+let feat_SPEv1p2             = feature "FEAT_SPEv1p2"             None v8p7 true  false "Armv8.7 SPE"
+let feat_WFxT                = feature "FEAT_WFxT"                None v8p7 true  false "WFE and WFI instructions with timeout"
+let feat_XS                  = feature "FEAT_XS"                  None v8p7 true  false "XS attribute"
+let feat_BRBE                = feature "FEAT_BRBE"                v9p2 None true  false "Branch Record Buffer Extensions"
 
 (* Features introduced prior to 2020 *)
 let feat_AdvSIMD             = feature "FEAT_AdvSIMD"             None None true  false "Advanced SIMD Extension"
@@ -196,7 +217,7 @@ let feat_FP                  = feature "FEAT_FP"                  None None true
 let feat_IVIPT               = feature "FEAT_IVIPT"               None None true  false "The IVIPT Extension"
 let feat_PCSRv8              = feature "FEAT_PCSRv8"              v8p0 None true  true  "PC Sample-base Profiling extension (not EL3 and EL2)"
 let feat_SPECRES             = feature "FEAT_SPECRES"             v8p0 v8p5 true  true  "Speculation restriction instructions"
-let feat_RAS                 = feature "FEAT_RAS"                 None None true  false "Reliability, Availability, and Serviceability (RAS) Extension"
+let feat_RAS                 = feature "FEAT_RAS"                 v8p0 v8p2 true  false "Reliability, Availability, and Serviceability (RAS) Extension"
 let feat_SB                  = feature "FEAT_SB"                  v8p0 None true  false "Speculation barrier"
 let feat_SHA1                = feature "FEAT_SHA1"                v8p0 None true  true  "Advanced SIMD SHA1 instructions"
 let feat_SHA256              = feature "FEAT_SHA256"              v8p0 None true  true  "Advanced SIMD SHA256 instructions	Split ARMv8.2-SHA into SHA-256, SHA-512 and SHA-3"
@@ -209,7 +230,7 @@ let feat_HPDS                = feature "FEAT_HPDS"                None v8p1 true
 let feat_LOR                 = feature "FEAT_LOR"                 None v8p1 true  false "Limited ordering regions"
 let feat_LSE                 = feature "FEAT_LSE"                 none v8p1 true  false "Large System Extensions"
 let feat_PAN                 = feature "FEAT_PAN"                 None v8p1 true  true  "Privileged access-never"
-let feat_PMUv3p1             = feature "FEAT_PMUv3p1"             None v8p1 true  false "PMU extensions version 3.1"
+let feat_PMUv3p1             = feature "FEAT_PMUv3p1"             v8p1 None true  false "PMU extensions version 3.1"
 let feat_RDM                 = feature "FEAT_RDM"                 None v8p1 true  true  "Rounding double multiply accumulate"
 let feat_HAFDBS              = feature "FEAT_HAFDBS"              v8p1 None true  false "Hardware updates to access flag and dirty state in translation tables"
 let feat_VHE                 = feature "FEAT_VHE"                 None v8p1 true  true  "Virtualization Host Extensions"
@@ -228,19 +249,19 @@ let feat_F32MM               = feature "FEAT_F32MM"               v8p2 None true
 let feat_F64MM               = feature "FEAT_F64MM"               v8p2 None true  false "SVE double-precision floating-point matrix multiply instruction"
 let feat_FHM                 = feature "FEAT_FHM"                 v8p2 None true  true  "Half-precision floating-point FMLAL instructions"
 let feat_FP16                = feature "FEAT_FP16"                v8p2 None true  true "Half-precision floating-point data processing"
-let feat_I8MM                = feature "FEAT_I8MM"                v8p2 v8p5 true  false "Int8 Matrix Multiplication"
+let feat_I8MM                = feature "FEAT_I8MM"                v8p2 v8p6 true  false "Int8 Matrix Multiplication"
 let feat_IESB                = feature "FEAT_IESB"                v8p2 None true  false "Implicit Error synchronization event"
 let feat_LPA                 = feature "FEAT_LPA"                 v8p2 None true  false "Large PA and IPA support"
 let feat_LSMAOC              = feature "FEAT_LSMAOC"              v8p2 None false true  "Load/Store instruction multiple atomicity and ordering controls"
 let feat_LVA                 = feature "FEAT_LVA"                 v8p2 None true  false "Large VA support"
-let feat_MPAM                = feature "FEAT_MPAM"                None None true  false "Memory Partitioning and Monitoring"
+let feat_MPAM                = feature "FEAT_MPAM"                v8p4 None true  false "Memory Partitioning and Monitoring"
 let feat_PCSRv8p2            = feature "FEAT_PCSRv8p2"            v8p2 None true  true  "PC Sample-based profiling version 8.2"
 let feat_SHA3                = feature "FEAT_SHA3"                v8p2 None true  false "Advanced SIMD EOR3, RAX1, XAR, and BCAX instructions	Split ARMv8.2-SHA into SHA-256, SHA-512 and SHA-3"
 let feat_SHA512              = feature "FEAT_SHA512"              v8p2 None true  false "Advanced SIMD SHA512 instructions	Split ARMv8.2-SHA into SHA-256, SHA-512 and SHA-3"
 let feat_SM3                 = feature "FEAT_SM3"                 v8p2 None true  false "Advanced SIMD SM3 instructions	Split into SM3 and SM4"
 let feat_SM4                 = feature "FEAT_SM4"                 v8p2 None true  false "Advanced SIMD SM4 instructions	Split into SM3 and SM4"
-let feat_SPE                 = feature "FEAT_SPE"                 None None true  false "Statistical Profiling Extension"
-let feat_SVE                 = feature "FEAT_SVE"                 None None true  false "Scalable Vector Extension"
+let feat_SPE                 = feature "FEAT_SPE"                 v8p2 None true  false "Statistical Profiling Extension"
+let feat_SVE                 = feature "FEAT_SVE"                 v8p2 None true  false "Scalable Vector Extension"
 let feat_TTCNP               = feature "FEAT_TTCNP"               None v8p2 true  true  "Common not private translations"
 let feat_HPDS2               = feature "FEAT_HPDS2"               v8p2 None true  true  "Heirarchical permission disables in translation tables 2"
 let feat_XNX                 = feature "FEAT_XNX"                 None v8p2 true  true  "Execute-never control distinction by Exception level at stage 2"
@@ -259,8 +280,8 @@ let feat_PACQARMA5           = feature "FEAT_PACQARMA5"           v8p3 None true
 let feat_PACIMP              = feature "FEAT_PACIMP"              v8p3 None true  false "Pointer authentication - IMPLEMENTATION DEFINED algorithm"
 let feat_PAuth               = feature "FEAT_PAuth"               None v8p3 true  false "Pointer authentication"
 let feat_PAuth2              = feature "FEAT_PAuth2"              v8p3 v8p6 true  false "Enhancements to pointer authentication"
-let feat_SPEv1p1             = feature "FEAT_SPEv1p1"             v8p3 v8p5 true  false "Statistical Profiling Extensions version 1.1"
-let feat_AMUv1               = feature "FEAT_AMUv1"               None None true  false "Activity Monitors Extension"
+let feat_SPEv1p1             = feature "FEAT_SPEv1p1"             v8p3 None true  false "Statistical Profiling Extensions version 1.1"
+let feat_AMUv1               = feature "FEAT_AMUv1"               v8p4 None true  true "Activity Monitors Extension"
 let feat_CNTSC               = feature "FEAT_CNTSC"               v8p4 None true  true  "Generic Counter Scaling"
 let feat_Debugv8p4           = feature "FEAT_Debugv8p4"           v8p4 None true  true  "Debug relaxations and extensions version 8.4"
 let feat_DoubleFault         = feature "FEAT_DoubleFault"         v8p4 None true  false "Double Fault Extension"
@@ -280,23 +301,23 @@ let feat_TRF                 = feature "FEAT_TRF"                 v8p4 None true
 let feat_TTL                 = feature "FEAT_TTL"                 None v8p4 true  false "Translation Table Level"
 let feat_BBM                 = feature "FEAT_BBM"                 None v8p4 true  false "Translation table break before make levels"
 let feat_TTST                = feature "FEAT_TTST"                v8p4 None true  false "Small translation tables"
-let feat_BTI                 = feature "FEAT_BTI"                 None None true  false "Branch target identification"
-let feat_FlagM2              = feature "FEAT_FlagM2"              None None true  false "Condition flag manipulation version 2"
-let feat_ExS                 = feature "FEAT_ExS"                 None None true  false "Disabling context synchronizing exception entry and exit"
-let feat_E0PD                = feature "FEAT_E0PD"                None None true  false "Preventing EL0 access to halves of address maps"
-let feat_FRINTTS             = feature "FEAT_FRINTTS"             None None true  false "FRINT32Z, FRINT32X, FRINT64Z, and FRINT64X instructions"
-let feat_GTG                 = feature "FEAT_GTG"                 None None true  false "Guest translation granule size"
-let feat_MTE                 = feature "FEAT_MTE"                 None None true  false "Instruction-only Memory Tagging Extension"
-let feat_MTE2                = feature "FEAT_MTE2"                None None true  false "Full Memory Tagging Extension"
-let feat_PMUv3p5             = feature "FEAT_PMUv3p5"             None None true  false "PMU Extension version 3.5"
-let feat_RNG                 = feature "FEAT_RNG"                 None None true  false "Random number generator"
-let feat_AMUv1p1             = feature "FEAT_AMUv1p1"             None None true  false "Activity Monitors Extension version 1.1"
-let feat_ECV                 = feature "FEAT_ECV"                 None None true  false "Enhanced counter virtualization"
-let feat_FGT                 = feature "FEAT_FGT"                 None None true  false "Fine Grain Traps"
+let feat_BTI                 = feature "FEAT_BTI"                 None v8p5 true  false "Branch target identification"
+let feat_FlagM2              = feature "FEAT_FlagM2"              None v8p5 true  false "Condition flag manipulation version 2"
+let feat_ExS                 = feature "FEAT_ExS"                 v8p5 None true  false "Disabling context synchronizing exception entry and exit"
+let feat_E0PD                = feature "FEAT_E0PD"                None v8p5 true  false "Preventing EL0 access to halves of address maps"
+let feat_FRINTTS             = feature "FEAT_FRINTTS"             v8p5 None true  false "FRINT32Z, FRINT32X, FRINT64Z, and FRINT64X instructions"
+let feat_GTG                 = feature "FEAT_GTG"                 None v8p5 true  false "Guest translation granule size"
+let feat_MTE                 = feature "FEAT_MTE"                 v8p5 None true  false "Instruction-only Memory Tagging Extension"
+let feat_MTE2                = feature "FEAT_MTE2"                v8p5 None true  false "Full Memory Tagging Extension"
+let feat_PMUv3p5             = feature "FEAT_PMUv3p5"             None v8p5 true  true  "PMU Extension version 3.5"
+let feat_RNG                 = feature "FEAT_RNG"                 v8p5 None true  false "Random number generator"
+let feat_AMUv1p1             = feature "FEAT_AMUv1p1"             v8p6 None true  true  "Activity Monitors Extension version 1.1"
+let feat_ECV                 = feature "FEAT_ECV"                 None v8p6 true  true  "Enhanced counter virtualization"
+let feat_FGT                 = feature "FEAT_FGT"                 None v8p6 true  true  "Fine Grain Traps"
 let feat_MPAMv0p1            = feature "FEAT_MPAMv0p1"            None None true  false "Memory Partitioning and Monitoring version 0.1"
 let feat_MPAMv1p1            = feature "FEAT_MPAMv1p1"            None None true  false "Memory Partitioning and Monitoring version1.1"
-let feat_MTPMU               = feature "FEAT_MTPMU"               None None true  false "Multi-threaded PMU Extensions"
-let feat_TWED                = feature "FEAT_TWED"                None None true  false "Delayed trapping of WFE"
+let feat_MTPMU               = feature "FEAT_MTPMU"               v8p6 None true  true  "Multi-threaded PMU Extensions"
+let feat_TWED                = feature "FEAT_TWED"                v8p6 None true  true  "Delayed trapping of WFE"
 let feat_ETMv4               = feature "FEAT_ETMv4"               None None true  false "Embedded Trace Macrocell version4"
 let feat_ETMv4p1             = feature "FEAT_ETMv4p1"             None None true  false "Embedded Trace Macrocell version 4.1"
 let feat_ETMv4p2             = feature "FEAT_ETMv4p2"             None None true  false "Embedded Trace Macrocell version 4.2"
@@ -310,30 +331,79 @@ let feat_GICv3_TDIR          = feature "FEAT_GICv3_TDIR"          None None true
 let feat_GICv4               = feature "FEAT_GICv4"               None None true  false "Generic Interrupt Controller version 4"
 let feat_GICv4p1             = feature "FEAT_GICv4p1"             None None true  false "Generic Interrupt Controller version 4.1"
 let feat_PMUv3               = feature "FEAT_PMUv3"               None None true  false "PMU extension version 3"
-let feat_ETE                 = feature "FEAT_ETE"                 None None true  false "Embedded Trace Extension"
-let feat_ETEv1p1             = feature "FEAT_ETEv1p1"             None None true  false "Embedded Trace Extension, version 1.1"
-let feat_SVE2                = feature "FEAT_SVE2"                None None true  false "SVE version 2"
-let feat_SVE_AES             = feature "FEAT_SVE_AES"             None None true  false "SVE AES instructions"
-let feat_SVE_PMULL128        = feature "FEAT_SVE_PMULL128"        None None true  false "SVE PMULL instructions	SVE2-AES is split into AES and PMULL support"
-let feat_SVE_BitPerm         = feature "FEAT_SVE_BitPerm"         None None true  false "SVE Bit Permute"
-let feat_SVE_SHA3            = feature "FEAT_SVE_SHA3"            None None true  false "SVE SHA-3 instructions"
-let feat_SVE_SM4             = feature "FEAT_SVE_SM4"             None None true  false "SVE SM4 instructions"
+let feat_ETE                 = feature "FEAT_ETE"                 v9p0 None true  false "Embedded Trace Extension"
+let feat_ETEv1p1             = feature "FEAT_ETEv1p1"             v9p1 None true  false "Embedded Trace Extension, version 1.1"
+let feat_ETEv1p2             = feature "FEAT_ETEv1p2"             v9p2 None true  false "Embedded Trace Extension, version 1.2"
+let feat_SVE2                = feature "FEAT_SVE2"                v9p0 None true  false "SVE version 2"
+let feat_SVE_AES             = feature "FEAT_SVE_AES"             v9p0 None true  false "SVE AES instructions"
+let feat_SVE_PMULL128        = feature "FEAT_SVE_PMULL128"        v9p0 None true  false "SVE PMULL instructions	SVE2-AES is split into AES and PMULL support"
+let feat_SVE_BitPerm         = feature "FEAT_SVE_BitPerm"         v9p0 None true  false "SVE Bit Permute"
+let feat_SVE_SHA3            = feature "FEAT_SVE_SHA3"            v9p0 None true  false "SVE SHA-3 instructions"
+let feat_SVE_SM4             = feature "FEAT_SVE_SM4"             v9p0 None true  false "SVE SM4 instructions"
 let feat_TME                 = feature "FEAT_TME"                 None None true  false "Transactional Memory Extension"
-let feat_TRBE                = feature "FEAT_TRBE"                None None true  false "Trace Buffer Extension"
-let feat_SME                 = feature "FEAT_SME"                 None None true  false "Scalable Matrix Extension"
+let feat_TRBE                = feature "FEAT_TRBE"                v9p0 None true  false "Trace Buffer Extension"
+let feat_SME                 = feature "FEAT_SME"                 v9p2 None true  false "Scalable Matrix Extension"
 
 let feat_ASMv8p2             = feature "FEAT_ASMv8p2"             none v8p2 true  false "Armv8.2 changes to the A64 ISA"  (* P A2-86*)
 
-let foo = ("FEAT_SB",                 v8p0, none, true,  false, "Speculation barrier")
-let bar = String.compare "hello" "world"
-
-let extension_PMU = [feat_PMUv3p1; feat_PMUv3p4]
 
 let feature_compare (f1:feature) (f2:feature) = String.compare f1.name f2.name
 let feature_print (f:feature) = Printf.printf "%s\n" f.name
 
 module Fset = Set.Make(struct type t = feature;;let compare=feature_compare end)
-let features = Fset.of_list [feat_SME; feat_SB]
+
+let features = Fset.of_list [
+                   version_ARMv8p0; version_ARMv8p1; version_ARMv8p2; version_ARMv8p3;
+                   version_ARMv8p4; version_ARMv8p5; version_ARMv8p6; version_ARMv8p7; version_ARMv8p8;
+                   version_ARMv8p9; version_ARMv9p0; version_ARMv9p1; version_ARMv9p2; version_ARMv9p3;
+                   aarch32; aarch32_EL0; aarch32_EL1; aarch32_EL2; aarch32_EL3;
+                   aarch64; aarch64_EL0; aarch64_EL1; aarch64_EL2; aarch64_EL3;
+                   feat_SIMDFP; feat_PMUv3; feat_ETM; feat_Debug;
+
+                   feat_ABLE; feat_ADERR; feat_ANERR; feat_AIE; feat_B16B16; feat_CLRBHB; feat_CSSC;
+                   feat_CSV2_3; feat_D128; feat_Debugv8p9; feat_ECBHB; feat_ETEv1p3; feat_FGT2; feat_HAFT;
+                   feat_ITE; feat_LRCPC3; feat_LSE128; feat_LVA3; feat_MEC; feat_MTE4;
+                   feat_MTE_CANONICAL_TAGS; feat_MTE_TAGGED_FAR; feat_MTE_STORE_ONLY;
+                   feat_MTE_NO_ADDRESS_TAGS; feat_MTE_ASYM_FAULT; feat_MTE_ASYNC; feat_MTE_PERM;
+                   feat_PCSRv8p9; feat_PIE; feat_POE; feat_S1PIE; feat_S2PIE; feat_S1POE; feat_S2POE;
+                   feat_PMUv3p9; feat_PMUv3_EDGE; feat_PMUv3_ICNTR; feat_PMUv3_SS; feat_PRFMSLC;
+                   feat_RASv2; feat_RPRFM; feat_SCTLR2; feat_SEBEP; feat_SME_F16F16; feat_SME2;
+                   feat_SME2p1; feat_SPECCOSP; feat_SPMU; feat_SPEv1p4; feat_SPE_FDS; feat_SVE2p1;
+                   feat_SYSINSTR128; feat_SYSREG128; feat_TCR2; feat_THE; feat_TRBE_EXT;
+
+                   feat_CMOW; feat_CONSTPACFIELD; feat_Debugv8p8; feat_HBC; feat_HPMN0; feat_NMI;
+                   feat_GICv3_NMI; feat_MOPS; feat_PACQARMA3; feat_PMUv3_TH; feat_PMUv3p8;
+                   feat_PMUv3_EXT64; feat_PMUv3_EXT32; feat_RNG_TRAP; feat_SPEv1p3; feat_TIDCP1; feat_BRBEv1p1;
+
+                   feat_AFP; feat_HCX; feat_LPA2; feat_LS64; feat_LS64_V; feat_LS64_ACCDATA;
+                   feat_MTE3; feat_PAN3; feat_PMUv3p7; feat_RPRES; feat_RME; feat_SME_FA64;
+                   feat_SME_F64F64; feat_SME_I16I64; feat_EBF16; feat_SPEv1p2; feat_WFxT;
+                   feat_XS; feat_BRBE;
+
+                   feat_AdvSIMD; feat_AES; feat_PMULL; feat_CP15SDISABLE2; feat_CSV2;
+                   feat_CSV2_1p1; feat_CSV2_1p2; feat_CSV2_2; feat_CSV3; feat_DGH; feat_DoubleLock;
+                   feat_ETS; feat_FP; feat_IVIPT; feat_PCSRv8; feat_SPECRES; feat_RAS; feat_SB;
+                   feat_SHA1; feat_SHA256; feat_SSBS; feat_SSBS2; feat_CRC32; feat_nTLBPA;
+                   feat_Debugv8p1; feat_HPDS; feat_LOR; feat_LSE; feat_PAN; feat_PMUv3p1; feat_RDM;
+                   feat_HAFDBS; feat_VHE; feat_VMID16; feat_AA32BF16; feat_AA32HPD; feat_AA32I8MM;
+                   feat_PAN2; feat_BF16; feat_DPB2; feat_DPB; feat_Debugv8p2; feat_DotProd; feat_EVT;
+                   feat_F32MM; feat_F64MM; feat_FHM; feat_FP16; feat_I8MM; feat_IESB; feat_LPA;
+                   feat_LSMAOC; feat_LVA; feat_MPAM; feat_PCSRv8p2; feat_SHA3; feat_SHA512; feat_SM3;
+                   feat_SM4; feat_SPE; feat_SVE; feat_TTCNP; feat_HPDS2; feat_XNX; feat_UAO; feat_VPIPT;
+                   feat_CCIDX; feat_FCMA; feat_DoPD; feat_EPAC; feat_FPAC; feat_FPACCOMBINE; feat_JSCVT;
+                   feat_LRCPC; feat_NV; feat_PACQARMA5; feat_PACIMP; feat_PAuth; feat_PAuth2; feat_SPEv1p1;
+                   feat_AMUv1; feat_CNTSC; feat_Debugv8p4; feat_DoubleFault; feat_DIT; feat_FlagM;
+                   feat_IDST; feat_LRCPC2; feat_LSE2; feat_NV2; feat_PMUv3p4; feat_RASv1p1; feat_S2FWB;
+                   feat_SEL2; feat_TLBIOS; feat_TLBIRANGE; feat_TRF; feat_TTL; feat_BBM; feat_TTST;
+                   feat_BTI; feat_FlagM2; feat_ExS; feat_E0PD; feat_FRINTTS; feat_GTG; feat_MTE;
+                   feat_MTE2; feat_PMUv3p5; feat_RNG; feat_AMUv1p1; feat_ECV; feat_FGT; feat_MPAMv0p1;
+                   feat_MPAMv1p1; feat_MTPMU; feat_TWED; feat_ETMv4; feat_ETMv4p1; feat_ETMv4p2;
+                   feat_ETMv4p3; feat_ETMv4p4; feat_ETMv4p5; feat_ETMv4p6; feat_GICv3; feat_GICv3p1;
+                   feat_GICv3_TDIR; feat_GICv4; feat_GICv4p1; feat_PMUv3; feat_ETE; feat_ETEv1p1;
+                   feat_ETEv1p2; feat_SVE2; feat_SVE_AES; feat_SVE_PMULL128; feat_SVE_BitPerm;
+                   feat_SVE_SHA3; feat_SVE_SM4; feat_TME; feat_TRBE; feat_SME;
+
+                   feat_ASMv8p2;]
 
 let version_compare (v1:version) (v2:version) =
   let major = Int.compare v1.major v2.major in
@@ -342,77 +412,58 @@ let version_compare (v1:version) (v2:version) =
   else major
 
 let has feature arch = Fset.mem feature (Fset.of_list arch.features)
-let ( <-- ) feature arch = Fset.mem feature (Fset.of_list arch.features)
-let ( </- ) feature arch = Fset.mem feature (Fset.of_list arch.features)
+let ( <-- ) feature arch = Fset.mem feature arch
+let ( </- ) feature arch = not (feature <-- arch)
 
 let ( <* ) arg func = func arg
 let ( *> ) func arg = func arg
 
 let has_all features arch =
-  let len = Fset.cardinal (Fset.inter (Fset.of_list arch.features) (Fset.of_list features)) in
+  let len = Fset.cardinal (Fset.inter arch (Fset.of_list features)) in
   len == List.length features
 
 let has_none features arch =
-  let len = Fset.cardinal (Fset.inter (Fset.of_list arch.features) (Fset.of_list features)) in
+  let len = Fset.cardinal (Fset.inter arch (Fset.of_list features)) in
   len == 0
 
 let has_least_one features arch =
-  let len = Fset.cardinal (Fset.inter (Fset.of_list arch.features) (Fset.of_list features)) in
+  let len = Fset.cardinal (Fset.inter arch (Fset.of_list features)) in
   len >= 1
 
 let has_most_one features arch =
-  let len = Fset.cardinal (Fset.inter (Fset.of_list arch.features) (Fset.of_list features)) in
+  let len = Fset.cardinal (Fset.inter arch (Fset.of_list features)) in
   len <= 1
 
 let has_exact_one features arch =
-  let len = Fset.cardinal (Fset.inter (Fset.of_list arch.features) (Fset.of_list features)) in
+  let len = Fset.cardinal (Fset.inter arch (Fset.of_list features)) in
   len == 1
 
 let has_all_or_none features arch =
-  let len = Fset.cardinal (Fset.inter (Fset.of_list arch.features) (Fset.of_list features)) in
+  let len = Fset.cardinal (Fset.inter arch (Fset.of_list features)) in
   len == 0 || len == List.length features
+let find_first_error rs = Result.Ok true
+let find_ok rs =
+  if true then
+    Result.Ok true
+  else Result.Error ["error"]
+
+let collect_errors rs =
+  if true then
+    Result.Ok true
+  else Result.Error ["error"]
 
 let fooo feature arch = feature <-- arch
 
 let ( $ ) f a = f a
 
-let after cond result = if (cond) then result else Result.Ok true
-
-let req cond error () =
-  if cond then
-    Result.Ok true
-  else
-    Result.Error error
-
-let require ?(after=true) cond error =
-  if (after) then
-    if (cond)
-    then Result.Ok true
-    else Result.Error error
-  else Result.Ok true
-
-let under cond ?(require=false) error =
-  if (cond) then
-    if (require)
-    then Result.Ok true
-    else Result.Error error
-  else Result.Ok true
-
-
 (*A derives B*)
 let ( => ) a b = (not a || a && b)
 (*B requires A*)
 let ( <= ) a b = (not b || a && b)
+(*A equals B*)
+let ( <=> ) a b = (not a && not b || a && b)
 
 let ( $$ ) c e = if c then Result.Ok true else Result.Error e
-
-let foo arch =
-  after (feat_PACIMP <-- arch) $ require (feat_PAuth <-- arch) "can be implemented only if FEAT_PAuth is implemented."
-
-let foo arch =
-  under (feat_PACIMP <-- arch) ~require:(feat_PAuth <-- arch) "can be implemented only if FEAT_PAuth is implemented."
-
-let bar arch = req (feat_Debugv8p2 <-- arch) "FEAT_Debugv8p2 must be implemented." ()
 
 let aassert_feat_VHE arch =
   (feat_VHE <-- arch) => (feat_LSE <-- arch) $$ "An implementation that includes FEAT_VHE requires FEAT_LSE to be implemented."
@@ -421,53 +472,39 @@ let assert_feat_E0PD arch =
   (feat_E0PD <-- arch) => (feat_CSV3 <-- arch) $$ "Implementations that support FEAT_E0PD must also support FEAT_CSV3."
 
 let assert_feat_DoubleLock arch =
-  if arch.version.major == 9 then
-    require (feat_DoubleLock <-- arch) "The implementation of FEAT_DoubleLock in an Armv9 implementation is prohibited."
-  else if (feat_DoPD <-- arch) then
-    require (feat_DoubleLock </- arch) "If FEAT_DoPD is implemented, this FEAT_DoubleLock feature is not implemented."
-  else
-    require (feat_Debugv8p2 </- arch && feat_DoubleLock <-- arch) "If FEAT_DoPD is not implemented and FEAT_Debugv8p2 is not implemented, FEAT_DoubleLock is mandatory."
-
-let pmu_features = [feat_PMUv3; feat_PMUv3p1]
+  find_first_error [
+  (version_ARMv9p0 <-- arch) => (feat_DoubleLock </- arch) $$ "The implementation of FEAT_DoubleLock in an Armv9 implementation is prohibited.";
+  (feat_DoPD <-- arch) => (feat_DoubleLock </- arch) $$ "If FEAT_DoPD is implemented, this FEAT_DoubleLock feature is not implemented.";
+  (feat_DoPD </- arch) => (feat_Debugv8p2 </- arch) => (feat_Debugv8p2 <-- arch) $$ "If FEAT_DoPD is not implemented and FEAT_Debugv8p2 is not implemented, FEAT_DoubleLock is mandatory."
+    ]
 
 let assert_feat_VHE arch =
   (feat_LSE <-- arch) <= (feat_VHE <-- arch) $$  "An implementation that includes FEAT_VHE requires FEAT_LSE to be implemented."
 
 let assert_feat_FP16 arch =
-  if (arch.version < armv8p2) then
-    require (feat_FP16 </- arch) "This feature is OPTIONAL in Armv8.2 implementations."
-  else if (arch.version < armv8p4) then
-    require (feat_FP16 </- arch || feat_FP16 <-- arch && (feat_SVE <-- arch || feat_FHM <-- arch)) "This feature is OPTIONAL in Armv8.2 implementations. If SVE or FEAT_FHM is implemented, FEAT_FP16 is implemented."
-  else
-    require (feat_FP16 </- arch || feat_FP16 <-- arch && feat_FHM <-- arch) "From Armv8.4, if FEAT_FHM is not implemented, FEAT_FP16 is not implemented."
-
+  find_first_error [
+      (feat_FP16 <-- arch) <=> (feat_SVE <-- arch || feat_FHM <-- arch) $$ "This feature is OPTIONAL in Armv8.2 implementations, unless one of the following is implemented: The Scalable Vector Extension (SVE) and FEAT_FHM.";
+      (version_ARMv8p4 <-- arch) => (feat_FHM </- arch) => (feat_FP16 </- arch) $$ "From Armv8.4, if FEAT_FHM is not implemented, FEAT_FP16 is not implemented."
+    ]
 
 
 let assert_feat_FHM arch =
-  if (arch.version < armv8p2) then
-    require (feat_FHM </- arch) "This feature is OPTIONAL in Armv8.2 implementations."
-  else if (arch.version < armv8p4) then
-    require (feat_FHM </- arch || feat_FHM <-- arch && feat_FP16 <-- arch) "can be implemented only when FEAT_FP16 is implemented."
-  else
-    require (arch <*has_all_or_none*> [feat_FP16; feat_FHM])
-      "This feature is mandatory in Armv8.4 implementations when FEAT_FP16 is implemented. This feature is not implemented in Armv8.4 implementations when FEAT_FP16 is not implemented."
+  find_first_error [
+      (feat_FHM <-- arch) => (feat_FP16 <-- arch) $$ "can be implemented only when FEAT_FP16 is implemented.";
+      (version_ARMv8p4 <-- arch) => (feat_FHM <-- arch) <=> (feat_FP16 <-- arch) $$ "This feature is mandatory in Armv8.4 implementations when FEAT_FP16 is implemented. This feature is not implemented in Armv8.4 implementations when FEAT_FP16 is not implemented."
+    ]
 
 let assert_feat_HPDS2 arch =
-  if (feat_HPDS2 <-- arch) then
-    if (List.mem EL1 arch.a32elx) then
-      require (feat_HPDS <-- arch && feat_AA32HPD <-- arch) "implementation of FEAT_HPDS2 requires implementation of both: FEAT_HPDS, FEAT_AA32HPD, if any Exception level higher than EL0 can use AArch32"
-    else
-      require (feat_HPDS <-- arch) "implementation of FEAT_HPDS2 requires implementation of both: FEAT_HPDS"
-  else Result.Ok true
+  find_first_error [
+      (feat_HPDS2 <-- arch) => (feat_HPDS <-- arch) $$ "FEAT_HPDS2 requires implementation of FEAT_HPDS";
+      (aarch32_EL1 <-- arch) => (feat_HPDS2 <-- arch) => (feat_AA32HPD <-- arch) $$ "FEAT_HPDS2 requires implementation of FEAT_AA32HPD, if any Exception level higher than EL0 can use AArch32"
+    ]
 
 let assert_feat_F32MM arch =
   (feat_SVE <-- arch) <= (feat_F32MM <-- arch) $$ "FEAT_F32MM requires FEAT_SVE"
 
 let assert_feat_F64MM arch =
   (feat_SVE <-- arch) <= (feat_F64MM <-- arch) $$ "FEAT_F64MM requires FEAT_SVE"
-
-let assert_extention_RAS arch =
-  (List.mem RAS arch.extensions) <= (arch.version > armv8p2) $$ "The RAS Extension must be implemented in Armv8.2"
 
 
 let assert_feat_NV arch =
@@ -484,22 +521,12 @@ let assert_feat_PACQARMA5 arch =
 let assert_feat_PACIMP arch =
   (feat_PAuth <-- arch) <= (feat_PACIMP <-- arch) $$ "FEAT_PACIMP can be implemented only if FEAT_PAuth is implemented."
 
-let find_first_error rs = Result.Ok true
-let find_ok rs =
-  if true then
-    Result.Ok true
-  else Result.Error ["error"]
-
-let collect_errors rs =
-  if true then
-    Result.Ok true
-  else Result.Error ["error"]
 
 let assert_feat_DoPD arch =
   find_first_error [
       (feat_DoPD <-- arch) => (feat_DoubleLock </- arch) $$ "When FEAT_DoPD is implemented: FEAT_DoubleLock is not implemented.";
       (feat_DoPD <-- arch) => (feat_Debugv8p2 <-- arch)  $$ "When FEAT_DoPD is implemented: FEAT_Debugv8p2 must be implemented.";
-      (feat_DoPD <-- arch) => (arch <*has_extension*> PCSR) => (feat_PCSRv8p2 <-- arch) $$ "If PC Sample-based profiling is implemented, FEAT_PCSRv8p2 must be implemented."
+      (feat_DoPD <-- arch) => (feat_PCSRv8 <-- arch) => (feat_PCSRv8p2 <-- arch) $$ "If PC Sample-based profiling is implemented, FEAT_PCSRv8p2 must be implemented."
     ]
 
 let assert_feat_FPAC arch =
@@ -526,25 +553,162 @@ let assert_feat_Debugv8p4 arch =
   (feat_SEL2 <-- arch) => (feat_Debugv8p4 <-- arch) $$ "FEAT_Debugv8p4 is mandatory if FEAT_SEL2 is implemented"
 
 let assert_feat_TRF arch =
-  (arch <*has_extension*> ETM) => (feat_TRF <-- arch)
+  (feat_ETM <-- arch) => (feat_TRF <-- arch)
   $$ "If an ETM Architecture PE Trace Unit is implemented and the ETM PE Trace Unit includes System register access to its control registers, this feature is mandatory."
 
 let assert_feat_DoubleFault arch =
-  find_first_error
-    [(arch.version >= armv8p4) => (List.mem EL3 arch.a64elx) => (feat_DoubleFault <-- arch) $$ "This feature is mandatory in Armv8.4 implementations if EL3 is implemented";
-     (arch.version <armv8p4 || not (List.mem EL3 arch.a64elx)) => (feat_DoubleFault </- arch) $$ "Otherwise, it is not implemented"]
+  (version_ARMv8p4 <-- arch) => (aarch64_EL3 <-- arch) <=> (feat_DoubleFault <-- arch) $$ "This feature is mandatory in Armv8.4 implementations if EL3 is implemented, Otherwise, it is not implemented"
 
+let assert_feat_FRINTTS arch =
+  (feat_SIMDFP <-- arch) <=> (feat_FRINTTS <-- arch) $$ "This feature requires SIMD&FP, and is mandatory in Armv8.5 implementations when SIMD&FP is implemented"
 
-let ( ---> ) c e = if c then Result.Ok true else Result.Error e
+let assert_feat_AFP arch =
+  (feat_SIMDFP <-- arch) => (feat_AFP <-- arch) $$ "This feature is mandatory in Armv8.7 implementations that implement floating-point support."
 
-let helloo = true => false => false
-let hello = true => false
+let assert_feat_RPRES arch =
+  (feat_RPRES <-- arch) => (feat_AFP <-- arch) $$ "This feature requires implementation of FEAT_AFP."
 
-let world = true => true => false $$ "error"
+let assert_feat_LS64_V arch =
+  (feat_LS64_V <-- arch) => (feat_LS64 <-- arch) $$ "FEAT_LS64_V can be implemented only if FEAT_LS64 is implemented."
+
+let assert_feat_LS64_ACCDATA arch =
+  (feat_LS64_ACCDATA <-- arch) => (feat_LS64_V <-- arch) $$ "FEAT_LS64_ACCDATA can be implemented only if FEAT_LS64_V is implemented."
+
+let assert_feat_SPEv1p3 arch =
+  (feat_SPE <-- arch) => (feat_SPEv1p3 <-- arch) <=> (version_ARMv8p8 <-- arch) $$ "This feature is mandatory from Armv8.8 when FEAT_SPE is implemented."
+
+let assert_feat_Debugv8p8 arch =
+  (feat_Debug <-- arch) => (feat_Debugv8p8 <-- arch) <=> (version_ARMv8p8 <-- arch) $$ "This feature is mandatory from Armv8.8 when FEAT_SPE is implemented."
+
+let assert_feat_VERSION_v8 arch =
+  find_first_error [
+      (version_ARMv8p8 <-- arch) => (version_ARMv8p7 <-- arch) $$ "Arm A-profile Version 8.8 depends on 8.7";
+      (version_ARMv8p7 <-- arch) => (version_ARMv8p6 <-- arch) $$ "Arm A-profile Version 8.7 depends on 8.6";
+    ]
+
+let assert_feat_PMUv3 arch =
+  find_first_error [
+      (feat_PMUv3   <-- arch) <= (feat_PMUv3p1 <-- arch) $$ "FEAT_PMUv3p1 depends on FEAT_PMUv3";
+      (feat_PMUv3p1 <-- arch) <= (feat_PMUv3p4 <-- arch) $$ "(FEAT_PMUv3p4 depends on FEAT_PMUv3p1";
+      (feat_PMUv3p4 <-- arch) <= (feat_PMUv3p5 <-- arch) $$ "(FEAT_PMUv3p5 depends on FEAT_PMUv3p4";
+      (feat_PMUv3p5 <-- arch) <= (feat_PMUv3p7 <-- arch) $$ "(FEAT_PMUv3p7 depends on FEAT_PMUv3p5";
+      (feat_PMUv3p7 <-- arch) <= (feat_PMUv3p8 <-- arch) $$ "(FEAT_PMUv3p8 depends on FEAT_PMUv3p7";
+      (feat_PMUv3 <-- arch) => (version_ARMv8p1 <-- arch) => (feat_PMUv3p1 <-- arch)
+      $$ "The Performance Monitors Extension is an OPTIONAL feature, but if it is implemented, an Arm8.1 implementation must include FEAT_PMUv3p1.";
+      (feat_PMUv3 <-- arch) => (version_ARMv8p4 <-- arch) => (feat_PMUv3p4 <-- arch)
+      $$ "The Performance Monitors Extension is an OPTIONAL feature, but if it is implemented, an Armv8.4 implementation must include FEAT_PMUv3p4.";
+      (feat_PMUv3 <-- arch) => (version_ARMv8p5 <-- arch) => (feat_PMUv3p5 <-- arch)
+      $$ "The Performance Monitors Extension is an OPTIONAL feature, but if it is implemented, an Armv8.5 implementation must include FEAT_PMUv3p5.";
+      (feat_PMUv3 <-- arch) => (version_ARMv8p7 <-- arch) => (feat_PMUv3p7 <-- arch)
+      $$ "The Performance Monitors Extension is an OPTIONAL feature, but if it is implemented, an Armv8.7 implementation must include FEAT_PMUv3p7.";
+      (feat_PMUv3 <-- arch) => (version_ARMv8p8 <-- arch) => (feat_PMUv3p8 <-- arch)
+      $$ "The Performance Monitors Extension is an OPTIONAL feature, but if it is implemented, an Armv8.8 implementation must include FEAT_PMUv3p8."
+    ]
+
+let assert_feat_HPMN0 arch =
+  find_first_error [
+      (version_ARMv8p8 <-- arch) => (feat_PMUv3 <-- arch && (aarch32_EL2 <-- arch || aarch64_EL2 <-- arch)) => (feat_HPMN0 <-- arch) $$ "This feature is mandatory in Armv8.8 implementations that include FEAT_PMUv3 and EL2.";
+      (feat_HPMN0 <-- arch) => (feat_PMUv3 <-- arch && feat_FGT <-- arch && (aarch32_EL2 <-- arch || aarch64_EL2 <-- arch)) $$ "feature is OPTIONAL in implementations that include FEAT_PMUv3, FEAT_FGT, and EL2."]
+
+let assert_feat_PMUv3_TH arch =
+  (feat_PMUv3_TH <-- arch) => (feat_PMUv3 <-- arch && aarch64 <-- arch) $$ "This feature requires FEAT_PMUv3 to be implemented, and AArch64 state to be supported"
+
+let assert_feat_RAS arch =
+  find_first_error [
+      (feat_RAS <-- arch) <= (version_ARMv8p2 <-- arch) $$ "The RAS Extension must be implemented in Armv8.2";
+      (feat_RAS <-- arch) <= (feat_IESB <-- arch) $$ "Armv8.2 introduces the following architectural features to the RAS Extension: FEAT_IESB.";
+      (feat_RAS <-- arch) <= (feat_RASv1p1 <-- arch) $$ "FEAT_RASv1p1 depends on FEAT_RAS.";
+      (feat_RASv1p1 <-- arch) <= (feat_DoubleFault <-- arch) $$ "This feature is implemented if ID_AA64PFR0_EL1.RAS >= 0b0010"
+    ]
+
+let assert_feat_SPE arch =
+  find_first_error [
+      (feat_SPE <-- arch) <= (feat_SPEv1p1 <-- arch) $$ "FEAT_SPEv1p1 requires FEAT_SPE";
+      (feat_SPEv1p1 <-- arch) <= (feat_SPEv1p2 <-- arch) $$ "FEAT_SPEv1p2 requires FEAT_SPEv1p1";
+      (version_ARMv8p2 <-- arch) <= (feat_SPE <-- arch) $$ "The Statistical Profiling Extension, FEAT_SPE, is an OPTIONAL extension introduced by the Armv8.2 architecture.";
+      (version_ARMv8p3 <-- arch) <= (feat_SPEv1p1 <-- arch) $$ "FEAT_SPEv1p1 is OPTIONAL in Armv8.3 implementations.";
+      (feat_SPE <-- arch) => (version_ARMv8p5 <-- arch) <=> (feat_SPEv1p1 <-- arch) $$ "An Armv8.5 implementation that includes the Statistical Profiling Extension must include FEAT_SPEv1p1.";
+      (feat_SPE <-- arch) => (version_ARMv8p7 <-- arch) <=> (feat_SPEv1p2 <-- arch) $$ "FEAT_SPEv1p2 is mandatory from Armv8.7 when FEAT_SPE is implemented.";
+      (feat_SPE <-- arch) => (version_ARMv8p8 <-- arch) <=> (feat_SPEv1p3 <-- arch) $$ "FEAT_SPEv1p3 is mandatory from Armv8.8 when FEAT_SPE is implemented."
+    ]
+
+let assert_feat_PCSR arch =
+  find_first_error [
+      (feat_PCSRv8 <-- arch) <= (feat_PCSRv8p2 <-- arch) $$ "FEAT_PCSRv8p2 requires FEAT_PCSRv8";
+      (feat_PCSRv8p2 <-- arch) <= (feat_PCSRv8p9 <-- arch) $$ "FEAT_PCSRv8p9 requires FEAT_PCSRv8p2"
+    ]
+
+let assert_feat_SVE arch =
+  find_first_error [
+      (feat_SVE <-- arch) => (feat_FCMA <-- arch) $$ "Implementation of FEAT_SVE requires implementation of FEAT_FCMA.";
+      (feat_SVE <-- arch) => (feat_FP16 <-- arch) $$ "Implementation of FEAT_SVE requires implementation of FEAT_FP16."
+    ]
+
+let assert_feat_AMU arch =
+  (feat_AMUv1 <-- arch) <= (feat_AMUv1p1 <-- arch) $$ "FEAT_AMUv1p1 requires FEAT_AMUv1"
+
+let assert_feat_SVE2 arch =
+  find_first_error [
+      (feat_SVE  <-- arch) <= (feat_SVE2 <-- arch) $$ "FEAT_SVE2 requires FEAT_SVE.";
+      (feat_SVE2 <-- arch) <= (feat_SVE_AES <-- arch) $$ "FEAT_SVE_AES requires FEAT_SVE2.";
+      (feat_SVE2 <-- arch) <= (feat_SVE_BitPerm <-- arch) $$ "FEAT_SVE_BitPerm requires FEAT_SVE2.";
+      (feat_SVE2 <-- arch) <= (feat_SVE_PMULL128 <-- arch) $$ "FEAT_SVE_PMULL128 requires FEAT_SVE2.";
+      (feat_SVE2 <-- arch) <= (feat_SVE_SHA3 <-- arch) $$ "FEAT_SVE_SHA3 requires FEAT_SVE2.";
+      (feat_SVE2 <-- arch) <= (feat_SVE_SM4 <-- arch) $$ "FEAT_SVE_SM4 requires FEAT_SVE2."
+    ]
+
+let assert_feat_ETE arch =
+  find_first_error [
+      (feat_ETE <-- arch) <= (feat_ETEv1p1 <-- arch) $$ "FEAT_ETEv1p1 extends FEAT_ETE to support FEAT_FGT.";
+      (feat_ETEv1p1 <-- arch) <= (feat_ETEv1p2 <-- arch) $$ "FEAT_ETEv1p2 extends FEAT_ETE to support FEAT_RME";
+      (feat_ETE <-- arch) => (feat_TRBE <-- arch && feat_TRF <-- arch) $$ "FEAT_ETE requires FEAT_TRBE and FEAT_TRF.";
+      (feat_ETEv1p1 <-- arch) => (feat_TRBE <-- arch && feat_TRF <-- arch) $$ "FEAT_ETEv1p1 requires FEAT_TRBE and FEAT_TRF.";
+      (feat_ETEv1p2 <-- arch) => (feat_RME <-- arch) $$ "FEAT_ETEv1p2 requires FEAT_RME."
+    ]
+
+let assert_feat_TRBE arch =
+  (feat_TRBE <-- arch) => (feat_ETE <-- arch && feat_TRF <-- arch) $$ "FEAT_TRBE requires FEAT_ETE and FEAT_TRF."
+
+let assert_feat_BRBE arch =
+  (feat_BRBE <-- arch) <= (feat_BRBEv1p1 <-- arch) $$ "FEAT_BRBEv1p1 extends FEAT_BRBE to enable branch recording at EL3. This feature requires requires FEAT_BRBE."
+
+let assert_feat_RME arch =
+  find_first_error [
+      (feat_RME <-- arch) => (feat_RNG <-- arch || feat_RNG_TRAP <-- arch) $$ "FEAT_RME requires FEAT_RNG or FEAT_RNG_TRAP.";
+      (feat_ETE <-- arch) => (feat_RME <-- arch) => (feat_ETEv1p2 <-- arch) $$ "If the Trace Architecture is implemented, a PE that implements FEAT_RME also implements FEAT_ETEv1p2."
+    ]
+
+let assert_feat_SME arch =
+  find_first_error [
+      (feat_SME <-- arch) <= (feat_SME_FA64 <-- arch) $$ "FEAT_SME_FA64 requires FEAT_SME.";
+      (feat_SME <-- arch) <= (feat_EBF16 <-- arch) $$ "FEAT_EBF16 requires FEAT_SME.";
+      (feat_SME <-- arch) <= (feat_SME_F64F64 <-- arch) $$ "FEAT_SME_F64F64 requires FEAT_SME.";
+      (feat_SME <-- arch) <= (feat_SME_I16I64 <-- arch) $$ "FEAT_SME_I16I64 requires FEAT_SME."
+    ]
+
+let assert_feat_VERSION_v9 arch =
+  find_first_error [
+      (version_ARMv9p0 <-- arch) => (version_ARMv8p5 <-- arch) $$ "An Armv9.0 compliant implementation must also be Armv8.5 compliant.";
+      (version_ARMv9p1 <-- arch) => (version_ARMv8p6 <-- arch && version_ARMv9p0 <-- arch) $$ "An Armv9.1 compliant implementation must also be Armv8.6 and Armv9.0 compliant.";
+      (version_ARMv9p2 <-- arch) => (version_ARMv8p7 <-- arch && version_ARMv9p1 <-- arch) $$ "An Armv9.2 compliant implementation must also be Armv8.7 and Armv9.1 compliant.";
+      (version_ARMv9p3 <-- arch) => (version_ARMv8p8 <-- arch && version_ARMv9p2 <-- arch) $$ "An Armv9.3 compliant implementation must also be Armv8.8 and Armv9.2 compliant."
+    ]
+
+let checkers = [
+    assert_feat_E0PD; assert_feat_DoubleLock; assert_feat_VHE; assert_feat_FP16;
+    assert_feat_FHM; assert_feat_HPDS2; assert_feat_F32MM; assert_feat_F64MM;
+    assert_feat_NV; assert_feat_PAuth; assert_feat_PACQARMA5; assert_feat_PACIMP;
+    assert_feat_DoPD; assert_feat_FPAC; assert_feat_FPACCOMBINE; assert_feat_PACQARMA3;
+    assert_feat_CONSTPACFIELD; assert_feat_TTST; assert_feat_SEL2; assert_feat_Debugv8p4;
+    assert_feat_TRF; assert_feat_DoubleFault; assert_feat_FRINTTS; assert_feat_AFP;
+    assert_feat_RPRES; assert_feat_LS64_V; assert_feat_LS64_ACCDATA; assert_feat_SPEv1p3;
+    assert_feat_Debugv8p8; assert_feat_VERSION_v8; assert_feat_PMUv3; assert_feat_HPMN0;
+    assert_feat_PMUv3_TH; assert_feat_RAS; assert_feat_SPE; assert_feat_PCSR;
+    assert_feat_SVE; assert_feat_AMU; assert_feat_SVE2; assert_feat_ETE;
+    assert_feat_TRBE; assert_feat_BRBE; assert_feat_RME; assert_feat_SME; assert_feat_VERSION_v9
+  ]
+
 
 let () =
-  Seq.iter feature_print (Fset.to_seq features)
-
-let () =
-  let a = 1 in
-  Printf.printf "%b %s" hello (Result.get_error world)
+  Seq.iter feature_print (Fset.to_seq features);
+  Printf.printf "\n%d\n" (Fset.cardinal features)
