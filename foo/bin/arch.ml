@@ -735,4 +735,5 @@ let () =
 let () =
   let arch = architecture "A76" armv8p7 [feat_SB; feat_VHE; feat_LSE] in
   Seq.iter feature_print (List.to_seq arch.features);
-  Printf.printf "\n%b\n" (Result.get_ok (assert_feat_VHE (Fset.of_list arch.features)))
+  let result = find_first_error (List.map (fun f -> f (Fset.of_list arch.features)) checkers) in
+  Printf.printf "\n%b\n" (Result.get_ok result)
