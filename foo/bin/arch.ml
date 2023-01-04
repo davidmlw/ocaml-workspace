@@ -63,7 +63,7 @@ type feature = {
   }
 
 
-type architechure = {
+type architecture = {
     name: string;
     version: version;
     features: feature list}
@@ -737,3 +737,53 @@ let () =
   Seq.iter feature_print (List.to_seq arch.features);
   let result = find_first_error (List.map (fun f -> f (Fset.of_list arch.features)) checkers) in
   Printf.printf "\n%b\n" (Result.get_ok result)
+
+let int_of_json = function
+  |  `Int i -> i
+
+let string_of_json = function
+    `String s -> Some s
+  | _         -> None
+
+let assoc_of_json = function
+    `Assoc l -> l
+  |  _       -> []
+
+let from_json (json: [> Yojson.Safe.t]) =
+  let int_of    (json: [> Yojson.Safe.t]) = match json with | `Int    i -> i in
+  let string_of (json: [> Yojson.Safe.t]) = match json with | `String s -> s in
+  let assoc_of  (json: [> Yojson.Safe.t]) = match json with | `Assoc  a -> a in
+  let list_of   (json: [> Yojson.Safe.t]) = match json with | `List   l -> l in
+  let assoc = assoc_of json in
+  let name = string_of (List.assoc "name" assoc) in
+  let version = assoc_of (List.assoc "version" assoc) in
+  let major = int_of (List.assoc "major" version) in
+  let minor = int_of (List.assoc "minor" version) in
+  let features = List.map feature_by_name (List.map string_of (list_of (List.assoc "features" assoc))) in
+  architecture name {major=major; minor=minor} features
+
+let name_of_json json =  "name"
+
+let compare_arch archa archb =
+  let sa = Fset.of_list archa.features in
+  let sb = Fset.of_list archb.features in
+  Fset.diff sa sb
+
+let () =
+  let json_string = {|
+  {"number" : 42,
+   "string" : "yes",
+   "list": ["for", "sure", 42]}|} in
+  let json = Yojson.Safe.from_file "foo/bin/arch.json" in
+  let arch = from_json json in
+  let result = find_first_error (List.map (fun f -> f (Fset.of_list arch.features)) checkers) in
+  Format.printf "Parsed to %a\n" Yojson.Safe.pp json;
+  Printf.printf "Parsed to %s\n" arch.name;
+  Printf.printf "\n%b\n" (Result.get_ok result)
+
+let () =
+  let archa = from_json (Yojson.Safe.from_file "foo/bin/arch.json") in
+  let archb = from_json (Yojson.Safe.from_file "foo/bin/archb.json") in
+  let sa = Fset.of_list archa.features in
+  let sb = Fset.of_list archb.features in
+  Printf.printf "\n%d\n" (Fset.cardinal (Fset.diff sb sa))

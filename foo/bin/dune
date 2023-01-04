@@ -22,4 +22,4 @@
 (executable
  (name arch)
  (modules arch)
- (libraries foo bar.bar cmdliner lwt.unix))
+ (libraries foo bar.bar cmdliner lwt.unix yojson))
